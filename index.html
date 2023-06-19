@@ -3,10 +3,39 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Simple Calculator</title>
+    <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
+    <title>A Simple Calculator</title>
 </head>
 <body>
+    <div id="calc-container">
+        <div id="display">
 
+        </div>
+        <div class="calc-row">
+            <button class="number">1</button>
+            <button class="number">2</button>
+            <button class="number">3</button>
+            <button id="clear-button">C</button>
+        </div>
+        <div class="calc-row">
+            <button class="number">4</button>
+            <button class="number">5</button>
+            <button class="number">6</button>
+            <button id="plus-sign" class="operator">+</button>
+        </div>
+        <div class="calc-row">
+            <button class="number">7</button>
+            <button class="number">8</button>
+            <button class="number">9</button>
+            <button class="operator">&ndash;</button>
+        </div>
+        <div class="calc-row">
+            <button class="number">0</button>
+            <button class="operator">=</button>
+            <button id="divide-sign" class="operator">&div;</button>
+            <button class="operator">&Cross;</button>
+        </div>
+    </div>
 </body>
 </html>

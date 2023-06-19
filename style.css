@@ -1,0 +1,64 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: white;
+}
+
+#calc-container {
+    display: flex;
+    flex-direction: column;
+    margin: 10px auto;
+    width: 380px;
+    min-width: 350px;
+    height: 600px;
+    border-radius: 12px;
+    background: #1f7e89;
+    padding: 30px 10px;
+}
+
+#display {
+    flex-basis: 120px;
+    border-radius: 12px;
+    background: #838485;
+    margin:  25px 25px 45px;
+}
+
+.calc-row {
+    display: flex;
+    flex-basis: 50px;
+    justify-content: space-evenly;
+    margin-bottom: 30px;
+}
+
+.calc-row > button {
+    flex-basis: 60px; 
+    height: 60px;
+    border-radius: 100%;
+    border: none;
+    font-size: 1.2em;
+}
+
+#calc-container > .calc-row > button:hover {
+    color: black;
+    background: #e7ebf1;
+}
+
+.calc-row > .number {
+    background: #8ca4a8;
+}
+
+.calc-row > .operator {
+    background: #4cb05c;
+}
+
+.calc-row > #plus-sign, #divide-sign {
+    /* default font size of plus sign is too small.
+     * so we make it bigger
+     */
+    font-size: 1.5em;
+}
+
+.calc-row > #clear-button {
+    background: #c75577;
+}
