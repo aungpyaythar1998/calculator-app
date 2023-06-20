@@ -61,20 +61,63 @@ function checkIfUndefined(...inputVars) {
     return inputVars.every(eachVar => eachVar === undefined);
 }
 
+function eraseLastChar(inputStr) {
+    return inputStr.slice(0, -1);
+}
+
+function checkRepeatedDecimal(numField, inputText) {
+    return numField.includes(".") && inputText == ".";
+}
+
 function updateSecondNum(inputText) {
-    if (secondNum.includes(".") && inputText == ".") {
+    if (checkRepeatedDecimal(secondNum, inputText)) {
         return;
     }
-    secondNum += inputText;
-    updateDisplay(inputText);
+
+    if (inputText == backKey) {
+        secondNum = eraseLastChar(secondNum);
+        display.textContent = eraseLastChar(display.textContent);
+    } else {
+        secondNum += inputText;
+        updateDisplay(inputText);
+    }
 }
 
 function updateFirstNum(inputText) {
-    if (firstNum.includes(".") && inputText == ".") {
+    if (checkRepeatedDecimal(firstNum, inputText)) {
         return;
     }
-    firstNum += inputText;
-    updateDisplay(inputText);
+
+    if (inputText == backKey) {
+        firstNum = eraseLastChar(firstNum);
+        display.textContent = eraseLastChar(display.textContent);
+    } else {
+        firstNum += inputText;
+        updateDisplay(inputText);
+    }
+}
+
+/*
+ * Don't need to handle backspace erasing
+ * in set(First|Second)Num functions below
+ * because them being called imply their
+ * respective global variables are undefined
+ * and we cannot chop off the last character
+ * of the variable if it isn't a string.
+ */
+
+function setSecondNum(inputText) {
+    if (inputText != backKey) {
+        secondNum = inputText;
+        displayText(inputText);
+    }
+}
+
+function setFirstNum(inputText) {
+    if (inputText != backKey) {
+        firstNum = inputText;
+        displayText(inputText);
+    }
 }
 
 function processMathOperator(currentOperator) {
@@ -122,7 +165,7 @@ function processMathOperator(currentOperator) {
 function prepareMathExp(e) {
     let calcButtonText = e.target.textContent;
     let num = Number(calcButtonText);
-    if (isNaN(num) && calcButtonText != ".") {
+    if (isNaN(num) && calcButtonText != "." && calcButtonText != backKey) {
         if(calcButtonText in operators || calcButtonText == "=") {
             processMathOperator(calcButtonText);
         } else if (calcButtonText == "C") {
@@ -134,26 +177,26 @@ function prepareMathExp(e) {
         return;
     }
 
+
     // Pseudo-code :
     // if both first and second number are undefined, go to first number.
     // if only the first number is defined and no operator is defined, go to 
     // first number. But if the operator is defined go to second number
     if (checkIfUndefined(firstNum, secondNum)) { 
-        firstNum = calcButtonText;
-        displayText(calcButtonText);
+        setFirstNum(calcButtonText);
     } else if (checkIfDefined(firstNum) ) {
         if (display.textContent.includes("divide by zero")) {
             handleDivideByZero();
         }
+
         if (checkIfUndefined(prevOperator)) {
-            updateFirstNum(calcButtonText, first = true);
+            updateFirstNum(calcButtonText);
         } else { 
             if (checkIfDefined(secondNum)) {
-               updateSecondNum(calcButtonText, second = true);
+               updateSecondNum(calcButtonText);
                return;
             }
-            secondNum = calcButtonText;
-            displayText(calcButtonText);
+            setSecondNum(calcButtonText);
         }
     }
 }
@@ -165,6 +208,7 @@ const operators = {
     "⨯": multiply,
     "÷": divide,
 }
+const backKey = "↵";
 
 let firstNum;
 let secondNum;
