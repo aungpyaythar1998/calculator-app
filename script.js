@@ -52,7 +52,13 @@ function divide(num1, num2) {
 }
 
 function addToDisplay(output) {
-    display.textContent += output;
+    let outputChars = Array.from(output);
+    outputChars.every(eachChar => {
+        if (display.textContent.length <= 18) {
+            display.textContent += eachChar;
+            return true;
+        }
+    });
 }
 
 function clearDisplay() {
@@ -184,7 +190,7 @@ function processMathOperator(currentOperator) {
             }
             prevOperator = undefined;
             secondNum = undefined;
-            updateDisplay(result);
+            updateDisplay(result.toString());
         } else {
             if (typeof result != "string") {
                 firstNum = result.toString();
@@ -193,7 +199,7 @@ function processMathOperator(currentOperator) {
                 prevOperator = undefined;
             }
             secondNum = undefined;
-            updateDisplay(result);
+            updateDisplay(result.toString());
         }
     } 
 
