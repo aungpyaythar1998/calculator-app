@@ -1,43 +1,42 @@
-function handleFpSpecialCase(num1, num2, operation) {
+function handleFpSpecialCase(num1, operation, num2) {
     return operation(num1 * 10, num2 * 10) / 10;
-}
-
-function checkFpSpecialCase(num1, num2) {
-    let val1 = Math.abs(num1);
-    let val2 = Math.abs(num2);
-
-    let condition1 = (val1 == 0.1 && val2 == 0.2) ||
-                     (val1 == 0.2 && val2 == 0.1);
-    let condition2 = (val1 == 0.3 && val2 == 0.1) ||
-                     (val1 == 0.1 && val2 == 0.3);
-    let condition3 = (val1 == 0.3 && val2 == 0.2) ||
-                     (val1 == 0.2 && val2 == 0.3);
-    let condition4 = (val1 == 0.4 && val2 == 0.1) ||
-                     (val1 == 0.1 && val2 == 0.4);
-    return condition1 || condition2 || condition3 || condition4;
 }
 
 function handleDivideByZero() {
     clearDisplay();
 }
 
+function countFpDigit(...fps) {
+    return fps.reduce((digitsLen, eachFp) => { 
+        let eachLen = eachFp.toString().length - 1;
+        digitsLen.push(eachLen);
+        return digitsLen;
+    }, []);
+}
+
+function checkArrEqual(arr1, arr2) {
+    let arrIndex = 0;
+    return arr1.length == arr2.length && 
+           arr1.every(eachItem => eachItem === arr2[arrIndex++]);
+}
+
 function add(num1, num2) {
-    if (checkFpSpecialCase(num1, num2)){
-        return handleFpSpecialCase(num1, num2, add);
+    if (checkIfFp(num1, num2) && checkArrEqual(countFpDigit(num1, num2), [2, 2])) {
+        return handleFpSpecialCase(num1, add, num2);
     }
     return num1 + num2;
 }
 
 function subtract(num1, num2) {
-    if (checkFpSpecialCase(num1, num2)){
-        return handleFpSpecialCase(num1, num2, subtract);
+    if (checkIfFp(num1, num2) && checkArrEqual(countFpDigit(num1, num2), [2, 2])) {
+        return handleFpSpecialCase(num1, subtract, num2);
     }
     return num1 - num2;
 }
 
 function multiply(num1, num2) {
-    if (checkFpSpecialCase(num1, num2)){
-        return handleFpSpecialCase(num1, num2, multiply);
+    if (checkIfFp(num1, num2) && checkArrEqual((num1, num2), [2, 2])) {
+        return handleFpSpecialCase(num1, multiply, num2);
     }
     return num1 * num2;
 }
@@ -46,8 +45,8 @@ function divide(num1, num2) {
     if (num2 == 0) {
         return "You can't divide by zero, you dork";
     }
-    if (checkFpSpecialCase(num1, num2)){
-        return handleFpSpecialCase(num1, num2, divide);
+    if (checkIfFp(num1, num2) && checkArrEqual(countFpDigit(num1, num2), [2, 2])) {
+        return handleFpSpecialCase(num1, divide, num2);
     }
     return num1 / num2;
 }
@@ -75,11 +74,13 @@ function approxDecimalPlace(num, decimalPlaces) {
     return num;
 }
 
-function checkIfFp(num) {
-    return num.toString().includes(".");
+function checkIfFp(...nums) {
+    return nums.every(eachNum => {
+        return eachNum.toString().includes(".");
+    });
 }
 
-function operate(op, num1, num2) {
+function operate(num1, op, num2) {
     let result;
 
     clearDisplay();
@@ -176,7 +177,7 @@ function processMathOperator(currentOperator) {
         prevOperator = currentOperator;
         clearDisplay();
     } else if (checkIfDefined(firstNum, prevOperator, secondNum)) {
-        result = operate(prevOperator, +firstNum, +secondNum);
+        result = operate(+firstNum, prevOperator, +secondNum);
         if (currentOperator == "=") {
             if (typeof result != "string") {
                 firstNum = result.toString();
@@ -198,8 +199,7 @@ function processMathOperator(currentOperator) {
 
 }
 
-function prepareMathExp(e) {
-    let calcButtonText = e.target.textContent;
+function buildMathExp(calcButtonText) {
     let num = Number(calcButtonText);
     if (isNaN(num) && calcButtonText != "." && calcButtonText != backKey) {
         if(calcButtonText in operators || calcButtonText == "=") {
@@ -237,22 +237,48 @@ function prepareMathExp(e) {
     }
 }
 
+function handleButtonPress(e) {
+    buildMathExp(e.target.textContent);
+}
 
-const operators = {
+function handleKeyboardInput(e) {
+    if (e.key in keyMap) {
+        buildMathExp(keyMap[e.key]);
+    }
+    else if ("0" <= e.key <= "9") {
+        buildMathExp(e.key);
+    }
+}
+
+
+
+const operators= {
     "+": add,
     "–": subtract,
     "⨯": multiply,
     "÷": divide,
 }
+
 const backKey = "↵";
+
+const keyMap = { 
+    "-": "–",
+    "*": "⨯",
+    "/": "÷",
+    "Enter": "=",
+    "Backspace": backKey,
+    "Escape": "C"
+};
 
 let firstNum;
 let secondNum;
 let prevOperator;
 
+document.addEventListener("keydown", handleKeyboardInput);
+
 const buttons = document.querySelectorAll(".calc-row > button");
 buttons.forEach(eachButton => {
-    eachButton.addEventListener("click", prepareMathExp);
+    eachButton.addEventListener("click", handleButtonPress);
 });
 
 const display = document.querySelector("#display > p");
