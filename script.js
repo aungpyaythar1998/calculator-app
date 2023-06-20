@@ -1,5 +1,20 @@
-function handleFloatingPointSpecialCase(num1, num2, operation) {
+function handleFpSpecialCase(num1, num2, operation) {
     return operation(num1 * 10, num2 * 10) / 10;
+}
+
+function checkFpSpecialCase(num1, num2) {
+    let val1 = Math.abs(num1);
+    let val2 = Math.abs(num2);
+
+    let condition1 = (val1 == 0.1 && val2 == 0.2) ||
+                     (val1 == 0.2 && val2 == 0.1);
+    let condition2 = (val1 == 0.3 && val2 == 0.1) ||
+                     (val1 == 0.1 && val2 == 0.3);
+    let condition3 = (val1 == 0.3 && val2 == 0.2) ||
+                     (val1 == 0.2 && val2 == 0.3);
+    let condition4 = (val1 == 0.4 && val2 == 0.1) ||
+                     (val1 == 0.1 && val2 == 0.4);
+    return condition1 || condition2 || condition3 || condition4;
 }
 
 function handleDivideByZero() {
@@ -7,19 +22,22 @@ function handleDivideByZero() {
 }
 
 function add(num1, num2) {
-    if (num1 == 0.1 && num2 == 0.2 || num1 == 0.2 && num2 == 0.1) {
-        return handleFloatingPointSpecialCase(num1, num2, add);
+    if (checkFpSpecialCase(num1, num2)){
+        return handleFpSpecialCase(num1, num2, add);
     }
     return num1 + num2;
 }
 
 function subtract(num1, num2) {
+    if (checkFpSpecialCase(num1, num2)){
+        return handleFpSpecialCase(num1, num2, subtract);
+    }
     return num1 - num2;
 }
 
 function multiply(num1, num2) {
-    if (num1 == 0.1 && num2 == 0.2 || num1 == 0.2 && num2 == 0.1) {
-        return handleFloatingPointSpecialCase(num1, num2, multiply);
+    if (checkFpSpecialCase(num1, num2)){
+        return handleFpSpecialCase(num1, num2, multiply);
     }
     return num1 * num2;
 }
@@ -28,10 +46,13 @@ function divide(num1, num2) {
     if (num2 == 0) {
         return "You can't divide by zero, you dork";
     }
+    if (checkFpSpecialCase(num1, num2)){
+        return handleFpSpecialCase(num1, num2, divide);
+    }
     return num1 / num2;
 }
 
-function updateDisplay(output) {
+function addToDisplay(output) {
     display.textContent += output;
 }
 
@@ -39,9 +60,9 @@ function clearDisplay() {
     display.textContent = "";
 }
 
-function displayText(output) {
+function updateDisplay(output) {
     clearDisplay();
-    updateDisplay(output);
+    addToDisplay(output);
 }
 
 function operate(op, num1, num2) {
@@ -79,7 +100,7 @@ function updateSecondNum(inputText) {
         display.textContent = eraseLastChar(display.textContent);
     } else {
         secondNum += inputText;
-        updateDisplay(inputText);
+        addToDisplay(inputText);
     }
 }
 
@@ -93,7 +114,7 @@ function updateFirstNum(inputText) {
         display.textContent = eraseLastChar(display.textContent);
     } else {
         firstNum += inputText;
-        updateDisplay(inputText);
+        addToDisplay(inputText);
     }
 }
 
@@ -109,14 +130,14 @@ function updateFirstNum(inputText) {
 function setSecondNum(inputText) {
     if (inputText != backKey) {
         secondNum = inputText;
-        displayText(inputText);
+        updateDisplay(inputText);
     }
 }
 
 function setFirstNum(inputText) {
     if (inputText != backKey) {
         firstNum = inputText;
-        displayText(inputText);
+        updateDisplay(inputText);
     }
 }
 
@@ -145,7 +166,7 @@ function processMathOperator(currentOperator) {
             }
             prevOperator = undefined;
             secondNum = undefined;
-            displayText(result);
+            updateDisplay(result);
         } else {
             if (typeof result != "string") {
                 firstNum = result.toString();
@@ -154,7 +175,7 @@ function processMathOperator(currentOperator) {
                 prevOperator = undefined;
             }
             secondNum = undefined;
-            displayText(result);
+            updateDisplay(result);
         }
     } 
 
