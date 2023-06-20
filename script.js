@@ -65,12 +65,29 @@ function updateDisplay(output) {
     addToDisplay(output);
 }
 
+function approxDecimalPlace(num, decimalPlaces) {
+    let numStr = num.toString();
+    let numParts = numStr.split(".");
+    if (numParts[1].length > decimalPlaces ) {
+        numStr = numParts[0] + "." + numParts[1].slice(0, decimalPlaces);
+        num = +numStr;
+    }
+    return num;
+}
+
+function checkIfFp(num) {
+    return num.toString().includes(".");
+}
+
 function operate(op, num1, num2) {
     let result;
 
     clearDisplay();
     calculate = operators[op];
     result = calculate(num1, num2);
+    if(checkIfFp(result)) {
+        return approxDecimalPlace(result, 5);
+    }
     return result;
 }
 
