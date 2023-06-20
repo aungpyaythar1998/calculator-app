@@ -43,7 +43,7 @@ function multiply(num1, num2) {
 
 function divide(num1, num2) {
     if (num2 == 0) {
-        return "You can't divide by zero, you dork";
+        return "Cannot divide by zero";
     }
     if (checkIfFp(num1, num2) && checkArrEqual(countFpDigit(num1, num2), [2, 2])) {
         return handleFpSpecialCase(num1, divide, num2);
@@ -54,7 +54,7 @@ function divide(num1, num2) {
 function addToDisplay(output) {
     let outputChars = Array.from(output);
     outputChars.every(eachChar => {
-        if (display.textContent.length <= 18) {
+        if (display.textContent.length <= screenSize) {
             display.textContent += eachChar;
             return true;
         }
@@ -266,6 +266,7 @@ const operators= {
 }
 
 const backKey = "↵";
+const screenSize = 21; // Screen size in digits
 
 const keyMap = { 
     "-": "–",
