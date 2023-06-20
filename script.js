@@ -61,11 +61,19 @@ function checkIfUndefined(...inputVars) {
     return inputVars.every(eachVar => eachVar === undefined);
 }
 
-function updateNumber(numField, inputText) {
-    if (numField.includes(".") && inputText == ".") {
+function updateSecondNum(inputText) {
+    if (secondNum.includes(".") && inputText == ".") {
         return;
     }
-    numField += inputText;
+    secondNum += inputText;
+    updateDisplay(inputText);
+}
+
+function updateFirstNum(inputText) {
+    if (firstNum.includes(".") && inputText == ".") {
+        return;
+    }
+    firstNum += inputText;
     updateDisplay(inputText);
 }
 
@@ -135,13 +143,13 @@ function prepareMathExp(e) {
         displayText(calcButtonText);
     } else if (checkIfDefined(firstNum) ) {
         if (display.textContent.includes("divide by zero")) {
-            clearDisplay();
+            handleDivideByZero();
         }
         if (checkIfUndefined(prevOperator)) {
-            updateNumber(firstNum, calcButtonText);
+            updateFirstNum(calcButtonText, first = true);
         } else { 
             if (checkIfDefined(secondNum)) {
-               updateNumber(secondNum, calcButtonText);
+               updateSecondNum(calcButtonText, second = true);
                return;
             }
             secondNum = calcButtonText;
