@@ -142,8 +142,6 @@ function processMathOperator(currentOperator) {
         if (currentOperator == "=") {
             if (typeof result != "string") {
                 firstNum = result.toString();
-            } else {
-                firstNum = undefined;
             }
             prevOperator = undefined;
             secondNum = undefined;
