@@ -19,16 +19,29 @@
 
 #display {
     flex-basis: 120px;
+    max-height: 110px;
+    display: flex;
+    align-items: center;
     border-radius: 12px;
     background: #838485;
-    margin:  25px 25px 45px;
+    padding: 0 30px;
+    margin:  8px 15px 40px;
+}
+
+#display > p {
+    font-size: 2em;
 }
 
 .calc-row {
     display: flex;
     flex-basis: 50px;
     justify-content: space-evenly;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+}
+
+.calc-row:last-child {
+    justify-content: center;
+    gap: 24.4px;
 }
 
 .calc-row > button {
@@ -38,6 +51,7 @@
     border: none;
     font-size: 1.2em;
 }
+
 
 #calc-container > .calc-row > button:hover {
     color: black;
