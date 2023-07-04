@@ -266,7 +266,7 @@ const operators= {
 }
 
 const backKey = "↵";
-const screenSize = 21; // Screen size in digits
+const screenSize = 18; // Screen size in digits
 
 const keyMap = { 
     "-": "–",
