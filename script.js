@@ -54,7 +54,7 @@ function divide(num1, num2) {
 function addToDisplay(output) {
     let outputChars = Array.from(output);
     outputChars.every(eachChar => {
-        if (display.textContent.length <= screenSize) {
+        if (display.textContent.length < screenSize) {
             display.textContent += eachChar;
             return true;
         }
